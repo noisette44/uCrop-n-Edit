@@ -80,7 +80,8 @@ public class CropImageView extends TransformImageView {
         final CropParameters cropParameters = new CropParameters(
                 mMaxResultImageSizeX, mMaxResultImageSizeY,
                 compressFormat, compressQuality,
-                getImageInputPath(), getImageOutputPath(), getExifInfo());
+                getImageInputPath(), getImageOutputPath(), getExifInfo(),
+                getCurrentBrightness(), getCurrentContrast());
 
         new BitmapCropTask(getViewBitmap(), imageState, cropParameters, cropCallback).execute();
     }
@@ -395,6 +396,8 @@ public class CropImageView extends TransformImageView {
         if (mTransformImageListener != null) {
             mTransformImageListener.onScale(getCurrentScale());
             mTransformImageListener.onRotate(getCurrentAngle());
+            mTransformImageListener.onBrightness(getCurrentBrightness());
+            mTransformImageListener.onContrast(getCurrentContrast());
         }
     }
 

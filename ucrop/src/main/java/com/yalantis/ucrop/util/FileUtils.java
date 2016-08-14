@@ -520,6 +520,10 @@ public class FileUtils {
     }
 
     public static void copyFile(@NonNull String pathFrom, @NonNull String pathTo) throws IOException {
+        if (pathFrom.equalsIgnoreCase(pathTo)) {
+            return;
+        }
+
         FileChannel outputChannel = null;
         FileChannel inputChannel = null;
         try {

@@ -2,6 +2,11 @@ package com.yalantis.ucrop.task;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -14,10 +19,12 @@ import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.CropParameters;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.model.ImageState;
+import com.yalantis.ucrop.util.ColorFilterGenerator;
 import com.yalantis.ucrop.util.FileUtils;
 import com.yalantis.ucrop.util.ImageHeaderParser;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -49,6 +56,9 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
     private final ExifInfo mExifInfo;
     private final BitmapCropCallback mCropCallback;
 
+    private float mBrightness;
+    private int mContrast;
+
     public BitmapCropTask(@Nullable Bitmap viewBitmap, @NonNull ImageState imageState, @NonNull CropParameters cropParameters,
                           @Nullable BitmapCropCallback cropCallback) {
 
@@ -68,6 +78,9 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         mImageOutputPath = cropParameters.getImageOutputPath();
         mExifInfo = cropParameters.getExifInfo();
 
+        mBrightness = cropParameters.getBrightness();
+        mContrast = cropParameters.getContrast();
+
         mCropCallback = cropCallback;
     }
 
@@ -86,6 +99,29 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
 
         try {
             crop(resizeScale);
+
+            if (mBrightness != 0 || mContrast != 0) {
+                Bitmap sourceBitmap = BitmapFactory.decodeFile(mImageOutputPath);
+                Bitmap alteredBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(), sourceBitmap.getHeight(), sourceBitmap.getConfig());
+
+                ColorMatrix cm = new ColorMatrix();
+                ColorFilterGenerator.adjustContrast(cm, mContrast);
+                ColorFilterGenerator.adjustBrightness(cm, mBrightness);
+
+                ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(cm);
+
+                Canvas canvas = new Canvas(alteredBitmap);
+                Paint paint = new Paint();
+                paint.setColorFilter(colorFilter);
+                Matrix matrix = new Matrix();
+                canvas.drawBitmap(sourceBitmap, matrix, paint);
+
+                File file = new File(mImageOutputPath);
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                alteredBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                fileOutputStream.close();
+            }
+
             mViewBitmap = null;
         } catch (Throwable throwable) {
             return throwable;

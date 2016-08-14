@@ -89,10 +89,10 @@ public class UCropActivity extends AppCompatActivity {
     private UCropView mUCropView;
     private GestureCropImageView mGestureCropImageView;
     private OverlayView mOverlayView;
-    private ViewGroup mWrapperStateAspectRatio, mWrapperStateRotate, mWrapperStateScale;
-    private ViewGroup mLayoutAspectRatio, mLayoutRotate, mLayoutScale;
+    private ViewGroup mWrapperStateAspectRatio, mWrapperStateRotate, mWrapperStateScale, mWrapperStateBrightness, mWrapperStateContrast;
+    private ViewGroup mLayoutAspectRatio, mLayoutRotate, mLayoutScale, mLayoutBrightnessBar, mLayoutContrastBar;
     private List<ViewGroup> mCropAspectRatioViews = new ArrayList<>();
-    private TextView mTextViewRotateAngle, mTextViewScalePercent;
+    private TextView mTextViewRotateAngle, mTextViewScalePercent, mTextViewBrightness, mTextViewContrast;
     private View mBlockingView;
 
     private Bitmap.CompressFormat mCompressFormat = DEFAULT_COMPRESS_FORMAT;
@@ -284,15 +284,23 @@ public class UCropActivity extends AppCompatActivity {
             mWrapperStateRotate.setOnClickListener(mStateClickListener);
             mWrapperStateScale = (ViewGroup) findViewById(R.id.state_scale);
             mWrapperStateScale.setOnClickListener(mStateClickListener);
+            mWrapperStateBrightness = (ViewGroup) findViewById(R.id.state_brightness);
+            mWrapperStateBrightness.setOnClickListener(mStateClickListener);
+            mWrapperStateContrast = (ViewGroup) findViewById(R.id.state_contrast);
+            mWrapperStateContrast.setOnClickListener(mStateClickListener);
 
             mLayoutAspectRatio = (ViewGroup) findViewById(R.id.layout_aspect_ratio);
             mLayoutRotate = (ViewGroup) findViewById(R.id.layout_rotate_wheel);
             mLayoutScale = (ViewGroup) findViewById(R.id.layout_scale_wheel);
+            mLayoutBrightnessBar = (ViewGroup) findViewById(R.id.layout_brightness_bar);
+            mLayoutContrastBar = (ViewGroup) findViewById(R.id.layout_contrast_bar);
 
             setupAspectRatioWidget(intent);
             setupRotateWidget();
             setupScaleWidget();
             setupStatesWrapper();
+            setupBrightnessWidget();
+            setupContrastWidget();
         }
     }
 
@@ -346,6 +354,16 @@ public class UCropActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onBrightness(float currentBrightness) {
+            setBrightnessText(currentBrightness);
+        }
+
+        @Override
+        public void onContrast(float currentContrast) {
+            setContrastText(currentContrast);
+        }
+
+        @Override
         public void onLoadComplete() {
             mUCropView.animate().alpha(1).setDuration(300).setInterpolator(new AccelerateInterpolator());
             mBlockingView.setClickable(false);
@@ -368,10 +386,14 @@ public class UCropActivity extends AppCompatActivity {
         ImageView stateScaleImageView = (ImageView) findViewById(R.id.image_view_state_scale);
         ImageView stateRotateImageView = (ImageView) findViewById(R.id.image_view_state_rotate);
         ImageView stateAspectRatioImageView = (ImageView) findViewById(R.id.image_view_state_aspect_ratio);
+        ImageView stateBrightnessImageView = (ImageView) findViewById(R.id.image_view_state_brightness);
+        ImageView stateContrastImageView = (ImageView) findViewById(R.id.image_view_state_contrast);
 
         stateScaleImageView.setImageDrawable(new SelectedStateListDrawable(stateScaleImageView.getDrawable(), mActiveWidgetColor));
         stateRotateImageView.setImageDrawable(new SelectedStateListDrawable(stateRotateImageView.getDrawable(), mActiveWidgetColor));
         stateAspectRatioImageView.setImageDrawable(new SelectedStateListDrawable(stateAspectRatioImageView.getDrawable(), mActiveWidgetColor));
+        stateBrightnessImageView.setImageDrawable(new SelectedStateListDrawable(stateBrightnessImageView.getDrawable(), mActiveWidgetColor));
+        stateContrastImageView.setImageDrawable(new SelectedStateListDrawable(stateContrastImageView.getDrawable(), mActiveWidgetColor));
     }
 
 
@@ -507,6 +529,52 @@ public class UCropActivity extends AppCompatActivity {
         ((HorizontalProgressWheelView) findViewById(R.id.scale_scroll_wheel)).setMiddleLineColor(mActiveWidgetColor);
     }
 
+    private void setupBrightnessWidget() {
+        mTextViewBrightness = ((TextView) findViewById(R.id.text_view_brightness));
+        ((HorizontalProgressWheelView) findViewById(R.id.brightness_scroll_wheel))
+                .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
+                    @Override
+                    public void onScroll(float delta, float totalDistance) {
+                        mGestureCropImageView.postBrightness(delta / 3);
+                    }
+
+                    @Override
+                    public void onScrollEnd() {
+                        mGestureCropImageView.setImageToWrapCropBounds();
+                    }
+
+                    @Override
+                    public void onScrollStart() {
+                        mGestureCropImageView.cancelAllAnimations();
+                    }
+                });
+
+        ((HorizontalProgressWheelView) findViewById(R.id.brightness_scroll_wheel)).setMiddleLineColor(mActiveWidgetColor);
+    }
+
+    private void setupContrastWidget() {
+        mTextViewContrast = ((TextView) findViewById(R.id.text_view_contrast));
+        ((HorizontalProgressWheelView) findViewById(R.id.contrast_scroll_wheel))
+                .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
+                    @Override
+                    public void onScroll(float delta, float totalDistance) {
+                        mGestureCropImageView.postContrast(delta / 4);
+                    }
+
+                    @Override
+                    public void onScrollEnd() {
+                        mGestureCropImageView.setImageToWrapCropBounds();
+                    }
+
+                    @Override
+                    public void onScrollStart() {
+                        mGestureCropImageView.cancelAllAnimations();
+                    }
+                });
+
+        ((HorizontalProgressWheelView) findViewById(R.id.contrast_scroll_wheel)).setMiddleLineColor(mActiveWidgetColor);
+    }
+
     private void setAngleText(float angle) {
         if (mTextViewRotateAngle != null) {
             mTextViewRotateAngle.setText(String.format(Locale.getDefault(), "%.1f°", angle));
@@ -516,6 +584,18 @@ public class UCropActivity extends AppCompatActivity {
     private void setScaleText(float scale) {
         if (mTextViewScalePercent != null) {
             mTextViewScalePercent.setText(String.format(Locale.getDefault(), "%d%%", (int) (scale * 100)));
+        }
+    }
+
+    private void setBrightnessText(float brightness) {
+        if (mTextViewBrightness != null) {
+            mTextViewBrightness.setText(String.format(Locale.getDefault(), "%d", (int) brightness));
+        }
+    }
+
+    private void setContrastText(float contrast) {
+        if (mTextViewContrast != null) {
+            mTextViewContrast.setText(String.format(Locale.getDefault(), "%d", (int) contrast));
         }
     }
 
@@ -557,12 +637,16 @@ public class UCropActivity extends AppCompatActivity {
         mWrapperStateAspectRatio.setSelected(stateViewId == R.id.state_aspect_ratio);
         mWrapperStateRotate.setSelected(stateViewId == R.id.state_rotate);
         mWrapperStateScale.setSelected(stateViewId == R.id.state_scale);
+        mWrapperStateBrightness.setSelected(stateViewId == R.id.state_brightness);
+        mWrapperStateContrast.setSelected(stateViewId == R.id.state_contrast);
 
         mLayoutAspectRatio.setVisibility(stateViewId == R.id.state_aspect_ratio ? View.VISIBLE : View.GONE);
         mLayoutRotate.setVisibility(stateViewId == R.id.state_rotate ? View.VISIBLE : View.GONE);
         mLayoutScale.setVisibility(stateViewId == R.id.state_scale ? View.VISIBLE : View.GONE);
+        mLayoutBrightnessBar.setVisibility(stateViewId == R.id.state_brightness ? View.VISIBLE : View.GONE);
+        mLayoutContrastBar.setVisibility(stateViewId == R.id.state_contrast ? View.VISIBLE : View.GONE);
 
-        if (stateViewId == R.id.state_scale) {
+        if (stateViewId == R.id.state_scale || stateViewId == R.id.state_brightness || stateViewId == R.id.state_contrast) {
             setAllowedGestures(0);
         } else if (stateViewId == R.id.state_rotate) {
             setAllowedGestures(1);

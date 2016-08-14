@@ -2,6 +2,8 @@ package com.yalantis.ucrop.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
+import com.yalantis.ucrop.util.ColorFilterGenerator;
 import com.yalantis.ucrop.util.FastBitmapDrawable;
 import com.yalantis.ucrop.util.RectUtils;
 
@@ -51,6 +54,9 @@ public class TransformImageView extends ImageView {
 
     private int mMaxBitmapSize = 0;
 
+    private float mBrightness = 0;
+    private int mContrast = 0;
+
     private String mImageInputPath, mImageOutputPath;
     private ExifInfo mExifInfo;
 
@@ -67,6 +73,9 @@ public class TransformImageView extends ImageView {
 
         void onScale(float currentScale);
 
+        void onBrightness(float currentBrightness);
+
+        void onContrast(float currentContrast);
     }
 
     public TransformImageView(Context context) {
@@ -192,6 +201,14 @@ public class TransformImageView extends ImageView {
                 getMatrixValue(matrix, Matrix.MSCALE_X)) * (180 / Math.PI));
     }
 
+    public float getCurrentBrightness() {
+        return mBrightness;
+    }
+
+    public int getCurrentContrast() {
+        return mContrast;
+    }
+
     @Override
     public void setImageMatrix(Matrix matrix) {
         super.setImageMatrix(matrix);
@@ -252,6 +269,28 @@ public class TransformImageView extends ImageView {
                 mTransformImageListener.onRotate(getMatrixAngle(mCurrentImageMatrix));
             }
         }
+    }
+
+    public void postBrightness(float brightness) {
+        mBrightness += brightness;
+
+        setBrightnessContrast();
+        mTransformImageListener.onBrightness(mBrightness);
+    }
+
+
+    public void postContrast(float contrast) {
+        mContrast += contrast;
+
+        setBrightnessContrast();
+        mTransformImageListener.onContrast(mContrast);
+    }
+
+    private void setBrightnessContrast() {
+        ColorMatrix cm = new ColorMatrix();
+        mContrast = ColorFilterGenerator.adjustContrast(cm, mContrast);
+        mBrightness = ColorFilterGenerator.adjustBrightness(cm, mBrightness);
+        setColorFilter(new ColorMatrixColorFilter(cm));
     }
 
     protected void init() {

@@ -23,6 +23,13 @@
             android:id="@+id/layout_scale_wheel"
             layout="@layout/ucrop_layout_scale_wheel"/>
 
+        <include
+            android:id="@+id/layout_brightness_bar"
+            layout="@layout/ucrop_layout_brightness_wheel"/>
+
+        <include
+            android:id="@+id/layout_contrast_bar"
+            layout="@layout/ucrop_layout_contrast_wheel"/>
     </FrameLayout>
 
     <ImageView
@@ -74,5 +81,24 @@
 
         </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/state_brightness"
+            style="@style/ucrop_WrapperIconState">
+
+            <ImageView
+                android:id="@+id/image_view_state_brightness"
+                style="@style/ucrop_ImageViewWidgetIcon"
+                android:src="@drawable/ucrop_ic_brightness"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/state_contrast"
+            style="@style/ucrop_WrapperIconState">
+
+            <ImageView
+                android:id="@+id/image_view_state_contrast"
+                style="@style/ucrop_ImageViewWidgetIcon"
+                android:src="@drawable/ucrop_ic_contrast"/>
+        </FrameLayout>
     </LinearLayout>
 </merge>
