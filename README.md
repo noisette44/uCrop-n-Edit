@@ -1,4 +1,6 @@
-# uCrop - Image Cropping Library for Android
+# uCrop'n'Edit - Image Cropping + Editing Library for Android
+
+### This is a fork of "uCrop" Image Cropping Library for Android with additional Brightness and Contrast functionallity.
 
 #### This project aims to provide an ultimate and flexible image cropping experience. Made in [Yalantis] (https://yalantis.com/?utm_source=github)
 
@@ -15,7 +17,7 @@
 
 1. Include the library as local library project.
 
-    ``` compile 'com.yalantis:ucrop:2.1.2' ```
+    ``` compile 'com.krokyze:ucropnedit:2.1.2' ```
     
 2. Add UCropActivity into your AndroidManifest.xml
 
@@ -140,6 +142,10 @@ We’d be really happy if you sent us links to your projects where you use our c
 - [Thirty](https://play.google.com/store/apps/details?id=com.twominds.thirty).
 - [Light Smart HD](https://play.google.com/store/apps/details?id=com.SmartCamera.simple).
 - [BCReader] (https://play.google.com/store/apps/details?id=com.iac.bcreader).
+
+#### Apps using uCrop'n'Edit
+
+TODO
 
 ## License
 

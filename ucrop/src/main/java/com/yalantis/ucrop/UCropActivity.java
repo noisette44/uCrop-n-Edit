@@ -51,7 +51,6 @@ import java.util.Locale;
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
 
-@SuppressWarnings("ConstantConditions")
 public class UCropActivity extends AppCompatActivity {
 
     public static final int DEFAULT_COMPRESS_QUALITY = 90;

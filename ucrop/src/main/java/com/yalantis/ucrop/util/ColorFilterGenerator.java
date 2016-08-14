@@ -1,7 +1,6 @@
 package com.yalantis.ucrop.util;
 
 import android.graphics.ColorMatrix;
-import android.util.Log;
 
 /**
  * Created by Krokyze on 11.08.2016.
