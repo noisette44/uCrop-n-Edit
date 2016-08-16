@@ -59,7 +59,6 @@ install {
                 name "uCrop'n'Edit"
                 description = "Image Cropping + Editing Library for Android"
                 url siteUrl
-                artifactId 'ucropnedit'
 
                 // Set your license
                 licenses {

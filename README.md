@@ -17,7 +17,7 @@
 
 1. Include the library as local library project.
 
-    ``` compile 'com.krokyze:ucropnedit:2.1.2' ```
+    ``` compile 'com.github.krokyze:ucropnedit:2.1.2' ```
     
 2. Add UCropActivity into your AndroidManifest.xml
 
