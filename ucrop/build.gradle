@@ -46,7 +46,7 @@ dependencies {
 
 def siteUrl = 'https://github.com/krokyze/uCrop-n-Edit'      // Homepage URL of the library
 def gitUrl = 'https://github.com/krokyze/uCrop-n-Edit.git'   // Git repository URL
-group = "com.krokyze"
+group = "com.github.krokyze"
 
 install {
     repositories.mavenInstaller {

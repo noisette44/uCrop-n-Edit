@@ -2,9 +2,6 @@ package com.yalantis.ucrop.util;
 
 import android.graphics.ColorMatrix;
 
-/**
- * Created by Krokyze on 11.08.2016.
- */
 public class ColorFilterGenerator {
 
     private static double DELTA_INDEX[] = {
