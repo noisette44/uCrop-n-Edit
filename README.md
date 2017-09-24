@@ -17,9 +17,18 @@
 
 1. Include the library as local library project.
 
-    ``` compile 'com.github.krokyze:ucropnedit:2.2.0' ``` - lightweight general solution
+	```
+	allprojects {
+	   repositories {
+	      jcenter()
+	      maven { url "https://jitpack.io" }
+	   }
+	}
+	```
 
-    ``` compile 'com.github.krokyze:ucropnedit:2.2.0-native' ``` - get power of the native code to preserve image quality (+ about 1.5 MB to an apk size)
+    ``` compile 'com.github.krokyze:ucropnedit:2.2.1' ``` - lightweight general solution
+
+    ``` compile 'com.github.krokyze:ucropnedit:2.2.1-native' ``` - get power of the native code to preserve image quality (+ about 1.5 MB to an apk size)
     
 2. Add UCropActivity into your AndroidManifest.xml
 
@@ -85,6 +94,10 @@ Currently you can change:
   * CPU - armeabi armeabi-v7a x86 x86_64 arm64-v8a (for versions >= 2.1.2)
   
 # Changelog
+
+### Version: 2.2.1
+
+  * Fix including [#285](https://github.com/Yalantis/uCrop/issues/285)
 
 ### Version: 2.2
 
@@ -157,7 +170,7 @@ TODO
 
 ## License
 
-    Copyright 2016, Yalantis
+    Copyright 2017, Yalantis
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
