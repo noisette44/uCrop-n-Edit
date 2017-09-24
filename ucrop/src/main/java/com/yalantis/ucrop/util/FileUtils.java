@@ -201,6 +201,12 @@ public class FileUtils {
         return null;
     }
 
+    /**
+     * Copies one file into the other with the given paths.
+     * In the event that the paths are the same, trying to copy one file to the other
+     * will cause both files to become null.
+     * Simply skipping this step if the paths are identical.
+     */
     public static void copyFile(@NonNull String pathFrom, @NonNull String pathTo) throws IOException {
         if (pathFrom.equalsIgnoreCase(pathTo)) {
             return;
