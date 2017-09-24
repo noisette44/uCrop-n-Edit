@@ -1,11 +1,7 @@
-# uCrop'n'Edit - Image Cropping + Editing Library for Android
+## uCrop'n'Edit - Image Cropping + Editing Library for Android
 
-### This is a fork of "uCrop" Image Cropping Library for Android with additional Brightness and Contrast functionallity.
+#### This is a fork of "<a href="https://github.com/Yalantis/uCrop">uCrop</a>" Image Cropping Library for Android with additional Brightness and Contrast functionallity.
 
-#### This project aims to provide an ultimate and flexible image cropping experience. Made in [Yalantis] (https://yalantis.com/?utm_source=github)
-
-#### [How We Created uCrop] (https://yalantis.com/blog/how-we-created-ucrop-our-own-image-cropping-library-for-android/)
-#### Check this [project on Dribbble] (https://dribbble.com/shots/2484752-uCrop-Image-Cropping-Library)
 
 <p align="center" style="background-color:#ededed">
   <img src="preview.gif" width="320" height="560">
@@ -27,10 +23,8 @@
 	   }
 	}
 	```
-
-    ``` compile 'com.github.krokyze:ucropnedit:2.2.1' ``` - lightweight general solution
-
-    ``` compile 'com.github.krokyze:ucropnedit:2.2.1-native' ``` - get power of the native code to preserve image quality (+ about 1.5 MB to an apk size)
+	
+    ``` compile 'com.github.krokyze:ucropnedit:2.2.0-native' ```
     
 2. Add UCropActivity into your AndroidManifest.xml
 
