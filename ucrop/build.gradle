@@ -45,7 +45,7 @@ dependencies {
 def siteUrl = 'https://github.com/krokyze/uCrop-n-Edit'      // Homepage URL of the library
 def gitUrl = 'https://github.com/krokyze/uCrop-n-Edit.git'   // Git repository URL
 group = "com.github.krokyze"
-version = "2.2.0-native"
+version = "2.2.1-native"
 
 install {
     repositories.mavenInstaller {
@@ -125,7 +125,7 @@ bintray {
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         version {
-            name = "2.2.0-native"
+            name = "2.2.1-native"
 
             gpg {
                 sign = true //Determines whether to GPG sign the files. The default is false

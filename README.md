@@ -20,11 +20,11 @@
 	   repositories {
 	      jcenter()
 	      maven { url "https://jitpack.io" }
-	   }
+	   }š
 	}
 	```
 	
-    ``` compile 'com.github.krokyze:ucropnedit:2.2.0-native' ```
+    ``` compile 'com.github.krokyze:ucropnedit:2.2.1-native' ```
     
 2. Add UCropActivity into your AndroidManifest.xml
 
