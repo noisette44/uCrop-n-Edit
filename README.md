@@ -6,7 +6,7 @@
   <img src="preview.gif" width="320" height="560">
 </p>
 
-# Usage
+## Usage
 
 *For a working implementation, please have a look at the Sample Project - sample*
 
@@ -33,7 +33,7 @@ If you have any interesting ideas for uCrop’n’Edit do not be afraid to let m
 
 Massive thanks to guys from Yalantis for open sourcing this great library!
 
-# Changelog (<a href="https://github.com/Yalantis/uCrop#changelog">uCrop Changelog</a>)
+## Changelog (<a href="https://github.com/Yalantis/uCrop#changelog">uCrop Changelog</a>)
 
 ### Version: 2.2.1
 
