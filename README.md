@@ -1,6 +1,6 @@
 ## uCrop'n'Edit - Image Cropping + Editing Library for Android
 
-#### Using the source code of "<a href="https://github.com/Yalantis/uCrop">uCrop</a>", I’ve added two another features to the app: Brightness and Contrast. With these features, you can further enhance your images. 
+#### Using the source code of "<a href="https://github.com/Yalantis/uCrop">uCrop</a>", I’ve added two new features - ability to change Brightness and Contrast.
 
 <p align="center" style="background-color:#ededed">
   <img src="preview.gif" width="320" height="560">
