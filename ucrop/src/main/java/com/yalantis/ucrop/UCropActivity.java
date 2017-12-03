@@ -75,6 +75,8 @@ public class UCropActivity extends AppCompatActivity {
     private static final int TABS_COUNT = 3;
     private static final int SCALE_WIDGET_SENSITIVITY_COEFFICIENT = 15000;
     private static final int ROTATE_WIDGET_SENSITIVITY_COEFFICIENT = 42;
+    private static final int BRIGHTNESS_WIDGET_SENSITIVITY_COEFFICIENT = 3;
+    private static final int CONTRAST_WIDGET_SENSITIVITY_COEFFICIENT = 4;
 
     private String mToolbarTitle;
 
@@ -546,7 +548,7 @@ public class UCropActivity extends AppCompatActivity {
                 .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
                     @Override
                     public void onScroll(float delta, float totalDistance) {
-                        mGestureCropImageView.postBrightness(delta / 3);
+                        mGestureCropImageView.postBrightness(delta / BRIGHTNESS_WIDGET_SENSITIVITY_COEFFICIENT);
                     }
 
                     @Override
@@ -569,7 +571,7 @@ public class UCropActivity extends AppCompatActivity {
                 .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
                     @Override
                     public void onScroll(float delta, float totalDistance) {
-                        mGestureCropImageView.postContrast(delta / 4);
+                        mGestureCropImageView.postContrast(delta / CONTRAST_WIDGET_SENSITIVITY_COEFFICIENT);
                     }
 
                     @Override
