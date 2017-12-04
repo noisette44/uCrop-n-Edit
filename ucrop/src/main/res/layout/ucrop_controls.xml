@@ -30,6 +30,10 @@
         <include
             android:id="@+id/layout_contrast_bar"
             layout="@layout/ucrop_layout_contrast_wheel" />
+
+        <include
+            android:id="@+id/layout_saturation_bar"
+            layout="@layout/ucrop_layout_saturation_wheel" />
     </FrameLayout>
 
     <ImageView
@@ -95,6 +99,16 @@
                 android:id="@+id/image_view_state_contrast"
                 style="@style/ucrop_ImageViewWidgetIcon"
                 android:src="@drawable/ucrop_ic_contrast" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/state_saturation"
+            style="@style/ucrop_WrapperIconState">
+
+            <ImageView
+                android:id="@+id/image_view_state_saturation"
+                style="@style/ucrop_ImageViewWidgetIcon"
+                android:src="@drawable/ucrop_ic_saturation" />
         </FrameLayout>
     </com.yalantis.ucrop.view.ControlLayout>
 </merge>

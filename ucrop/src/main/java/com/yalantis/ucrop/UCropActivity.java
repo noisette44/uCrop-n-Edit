@@ -77,6 +77,7 @@ public class UCropActivity extends AppCompatActivity {
     private static final int ROTATE_WIDGET_SENSITIVITY_COEFFICIENT = 42;
     private static final int BRIGHTNESS_WIDGET_SENSITIVITY_COEFFICIENT = 3;
     private static final int CONTRAST_WIDGET_SENSITIVITY_COEFFICIENT = 4;
+    private static final int SATURATION_WIDGET_SENSITIVITY_COEFFICIENT = 3;
 
     private String mToolbarTitle;
 
@@ -85,9 +86,12 @@ public class UCropActivity extends AppCompatActivity {
     private int mStatusBarColor;
     private int mActiveWidgetColor;
     private int mToolbarWidgetColor;
-    @ColorInt private int mRootViewBackgroundColor;
-    @DrawableRes private int mToolbarCancelDrawable;
-    @DrawableRes private int mToolbarCropDrawable;
+    @ColorInt
+    private int mRootViewBackgroundColor;
+    @DrawableRes
+    private int mToolbarCancelDrawable;
+    @DrawableRes
+    private int mToolbarCropDrawable;
     private int mLogoColor;
 
     private boolean mShowBottomControls;
@@ -96,10 +100,13 @@ public class UCropActivity extends AppCompatActivity {
     private UCropView mUCropView;
     private GestureCropImageView mGestureCropImageView;
     private OverlayView mOverlayView;
-    private ViewGroup mWrapperStateAspectRatio, mWrapperStateRotate, mWrapperStateScale, mWrapperStateBrightness, mWrapperStateContrast;
-    private ViewGroup mLayoutAspectRatio, mLayoutRotate, mLayoutScale, mLayoutBrightnessBar, mLayoutContrastBar;
+    private ViewGroup mWrapperStateAspectRatio, mWrapperStateRotate, mWrapperStateScale,
+            mWrapperStateBrightness, mWrapperStateContrast, mWrapperStateSaturation;
+    private ViewGroup mLayoutAspectRatio, mLayoutRotate, mLayoutScale,
+            mLayoutBrightnessBar, mLayoutContrastBar, mLayoutSaturationBar;
     private List<ViewGroup> mCropAspectRatioViews = new ArrayList<>();
-    private TextView mTextViewRotateAngle, mTextViewScalePercent, mTextViewBrightness, mTextViewContrast;
+    private TextView mTextViewRotateAngle, mTextViewScalePercent,
+            mTextViewBrightness, mTextViewContrast, mTextViewSaturation;
     private View mBlockingView;
 
     private Bitmap.CompressFormat mCompressFormat = DEFAULT_COMPRESS_FORMAT;
@@ -297,12 +304,15 @@ public class UCropActivity extends AppCompatActivity {
             mWrapperStateBrightness.setOnClickListener(mStateClickListener);
             mWrapperStateContrast = (ViewGroup) findViewById(R.id.state_contrast);
             mWrapperStateContrast.setOnClickListener(mStateClickListener);
+            mWrapperStateSaturation = (ViewGroup) findViewById(R.id.state_saturation);
+            mWrapperStateSaturation.setOnClickListener(mStateClickListener);
 
             mLayoutAspectRatio = (ViewGroup) findViewById(R.id.layout_aspect_ratio);
             mLayoutRotate = (ViewGroup) findViewById(R.id.layout_rotate_wheel);
             mLayoutScale = (ViewGroup) findViewById(R.id.layout_scale_wheel);
             mLayoutBrightnessBar = (ViewGroup) findViewById(R.id.layout_brightness_bar);
             mLayoutContrastBar = (ViewGroup) findViewById(R.id.layout_contrast_bar);
+            mLayoutSaturationBar = (ViewGroup) findViewById(R.id.layout_saturation_bar);
 
             setupAspectRatioWidget(intent);
             setupRotateWidget();
@@ -310,6 +320,7 @@ public class UCropActivity extends AppCompatActivity {
             setupStatesWrapper();
             setupBrightnessWidget();
             setupContrastWidget();
+            setupSaturationWidget();
         }
     }
 
@@ -375,6 +386,11 @@ public class UCropActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onSaturation(float currentSaturation) {
+            setSaturationText(currentSaturation);
+        }
+
+        @Override
         public void onLoadComplete() {
             mUCropView.animate().alpha(1).setDuration(300).setInterpolator(new AccelerateInterpolator());
             mBlockingView.setClickable(false);
@@ -399,12 +415,14 @@ public class UCropActivity extends AppCompatActivity {
         ImageView stateAspectRatioImageView = (ImageView) findViewById(R.id.image_view_state_aspect_ratio);
         ImageView stateBrightnessImageView = (ImageView) findViewById(R.id.image_view_state_brightness);
         ImageView stateContrastImageView = (ImageView) findViewById(R.id.image_view_state_contrast);
+        ImageView stateSaturationImageView = (ImageView) findViewById(R.id.image_view_state_saturation);
 
         stateScaleImageView.setImageDrawable(new SelectedStateListDrawable(stateScaleImageView.getDrawable(), mActiveWidgetColor));
         stateRotateImageView.setImageDrawable(new SelectedStateListDrawable(stateRotateImageView.getDrawable(), mActiveWidgetColor));
         stateAspectRatioImageView.setImageDrawable(new SelectedStateListDrawable(stateAspectRatioImageView.getDrawable(), mActiveWidgetColor));
         stateBrightnessImageView.setImageDrawable(new SelectedStateListDrawable(stateBrightnessImageView.getDrawable(), mActiveWidgetColor));
         stateContrastImageView.setImageDrawable(new SelectedStateListDrawable(stateContrastImageView.getDrawable(), mActiveWidgetColor));
+        stateSaturationImageView.setImageDrawable(new SelectedStateListDrawable(stateSaturationImageView.getDrawable(), mActiveWidgetColor));
     }
 
 
@@ -588,6 +606,29 @@ public class UCropActivity extends AppCompatActivity {
         ((HorizontalProgressWheelView) findViewById(R.id.contrast_scroll_wheel)).setMiddleLineColor(mActiveWidgetColor);
     }
 
+    private void setupSaturationWidget() {
+        mTextViewSaturation = ((TextView) findViewById(R.id.text_view_saturation));
+        ((HorizontalProgressWheelView) findViewById(R.id.saturation_scroll_wheel))
+                .setScrollingListener(new HorizontalProgressWheelView.ScrollingListener() {
+                    @Override
+                    public void onScroll(float delta, float totalDistance) {
+                        mGestureCropImageView.postSaturation(delta / SATURATION_WIDGET_SENSITIVITY_COEFFICIENT);
+                    }
+
+                    @Override
+                    public void onScrollEnd() {
+                        mGestureCropImageView.setImageToWrapCropBounds();
+                    }
+
+                    @Override
+                    public void onScrollStart() {
+                        mGestureCropImageView.cancelAllAnimations();
+                    }
+                });
+
+        ((HorizontalProgressWheelView) findViewById(R.id.saturation_scroll_wheel)).setMiddleLineColor(mActiveWidgetColor);
+    }
+
     private void setAngleText(float angle) {
         if (mTextViewRotateAngle != null) {
             mTextViewRotateAngle.setText(String.format(Locale.getDefault(), "%.1f°", angle));
@@ -609,6 +650,12 @@ public class UCropActivity extends AppCompatActivity {
     private void setContrastText(float contrast) {
         if (mTextViewContrast != null) {
             mTextViewContrast.setText(String.format(Locale.getDefault(), "%d", (int) contrast));
+        }
+    }
+
+    private void setSaturationText(float saturation) {
+        if (mTextViewSaturation != null) {
+            mTextViewSaturation.setText(String.format(Locale.getDefault(), "%d", (int) saturation));
         }
     }
 
@@ -651,14 +698,17 @@ public class UCropActivity extends AppCompatActivity {
         mWrapperStateScale.setSelected(stateViewId == R.id.state_scale);
         mWrapperStateBrightness.setSelected(stateViewId == R.id.state_brightness);
         mWrapperStateContrast.setSelected(stateViewId == R.id.state_contrast);
+        mWrapperStateSaturation.setSelected(stateViewId == R.id.state_saturation);
 
         mLayoutAspectRatio.setVisibility(stateViewId == R.id.state_aspect_ratio ? View.VISIBLE : View.GONE);
         mLayoutRotate.setVisibility(stateViewId == R.id.state_rotate ? View.VISIBLE : View.GONE);
         mLayoutScale.setVisibility(stateViewId == R.id.state_scale ? View.VISIBLE : View.GONE);
         mLayoutBrightnessBar.setVisibility(stateViewId == R.id.state_brightness ? View.VISIBLE : View.GONE);
         mLayoutContrastBar.setVisibility(stateViewId == R.id.state_contrast ? View.VISIBLE : View.GONE);
+        mLayoutSaturationBar.setVisibility(stateViewId == R.id.state_saturation ? View.VISIBLE : View.GONE);
 
-        if (stateViewId == R.id.state_scale || stateViewId == R.id.state_brightness || stateViewId == R.id.state_contrast) {
+        if (stateViewId == R.id.state_scale || stateViewId == R.id.state_brightness
+                || stateViewId == R.id.state_contrast || stateViewId == R.id.state_saturation) {
             setAllowedGestures(0);
         } else if (stateViewId == R.id.state_rotate) {
             setAllowedGestures(1);

@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/text_view_contrast"
         style="@style/ucrop_TextViewWidgetText"
-        android:text="100%"/>
+        tools:text="100%"/>
 
     <com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
         android:id="@+id/contrast_scroll_wheel"

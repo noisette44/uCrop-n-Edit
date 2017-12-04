@@ -57,7 +57,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
     private final BitmapCropCallback mCropCallback;
 
     private float mBrightness;
-    private int mContrast;
+    private float mContrast;
+    private float mSaturation;
 
     private int mCroppedImageWidth, mCroppedImageHeight;
     private int cropOffsetX, cropOffsetY;
@@ -83,6 +84,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
 
         mBrightness = cropParameters.getBrightness();
         mContrast = cropParameters.getContrast();
+        mSaturation = cropParameters.getSaturation();
 
         mCropCallback = cropCallback;
     }
@@ -103,13 +105,14 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         try {
             crop(resizeScale);
 
-            if (mBrightness != 0 || mContrast != 0) {
+            if (mBrightness != 0.0f || mContrast != 0.0f || mSaturation != 0.0f) {
                 Bitmap sourceBitmap = BitmapFactory.decodeFile(mImageOutputPath);
                 Bitmap alteredBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(), sourceBitmap.getHeight(), sourceBitmap.getConfig());
 
                 ColorMatrix cm = new ColorMatrix();
-                ColorFilterGenerator.adjustContrast(cm, mContrast);
                 ColorFilterGenerator.adjustBrightness(cm, mBrightness);
+                ColorFilterGenerator.adjustContrast(cm, mContrast);
+                ColorFilterGenerator.adjustSaturation(cm, mSaturation);
 
                 ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(cm);
 

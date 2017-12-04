@@ -63,22 +63,23 @@ public class ColorFilterGenerator {
         return value;
     }
 
-    public static int adjustContrast(ColorMatrix cm, int value) {
-        value = (int) cleanValue(value, 50);
+    public static float adjustContrast(ColorMatrix cm, float value) {
+        value = cleanValue(value, 50);
 
         if (value == 0) {
             return value;
         }
         float x;
         if (value < 0) {
-            x = 127 + (float) value / 100 * 127;
+            x = 127 + value / 100 * 127;
         } else {
+            int valueInt = (int) value;
             x = value % 2;
             if (x == 0) {
-                x = (float) DELTA_INDEX[value];
+                x = (float) DELTA_INDEX[valueInt];
             } else {
                 //x = DELTA_INDEX[(p_val<<0)]; // this is how the IDE does it.
-                x = (float) DELTA_INDEX[(value << 0)] * (1 - x) + (float) DELTA_INDEX[(value << 0) + 1] * x; // use linear interpolation for more granularity.
+                x = (float) DELTA_INDEX[(valueInt << 0)] * (1 - x) + (float) DELTA_INDEX[(valueInt << 0) + 1] * x; // use linear interpolation for more granularity.
             }
             x = x * 127 + 127;
         }
@@ -96,10 +97,10 @@ public class ColorFilterGenerator {
         return value;
     }
 
-    public static void adjustSaturation(ColorMatrix cm, float value) {
+    public static float adjustSaturation(ColorMatrix cm, float value) {
         value = cleanValue(value, 100);
         if (value == 0) {
-            return;
+            return value;
         }
 
         float x = 1 + ((value > 0) ? 3 * value / 100 : value / 100);
@@ -116,6 +117,7 @@ public class ColorFilterGenerator {
                         0, 0, 0, 0, 1
                 };
         cm.postConcat(new ColorMatrix(mat));
+        return value;
     }
 
 

@@ -55,7 +55,8 @@ public class TransformImageView extends ImageView {
     private int mMaxBitmapSize = 0;
 
     private float mBrightness = 0;
-    private int mContrast = 0;
+    private float mContrast = 0;
+    private float mSaturation = 0;
 
     private String mImageInputPath, mImageOutputPath;
     private ExifInfo mExifInfo;
@@ -76,6 +77,8 @@ public class TransformImageView extends ImageView {
         void onBrightness(float currentBrightness);
 
         void onContrast(float currentContrast);
+
+        void onSaturation(float currentSaturation);
     }
 
     public TransformImageView(Context context) {
@@ -205,8 +208,12 @@ public class TransformImageView extends ImageView {
         return mBrightness;
     }
 
-    public int getCurrentContrast() {
+    public float getCurrentContrast() {
         return mContrast;
+    }
+
+    public float getCurrentSaturation() {
+        return mSaturation;
     }
 
     @Override
@@ -275,7 +282,7 @@ public class TransformImageView extends ImageView {
     public void postBrightness(float brightness) {
         mBrightness += brightness;
 
-        setBrightnessContrast();
+        setColorFilters();
         mTransformImageListener.onBrightness(mBrightness);
     }
 
@@ -283,14 +290,22 @@ public class TransformImageView extends ImageView {
     public void postContrast(float contrast) {
         mContrast += contrast;
 
-        setBrightnessContrast();
+        setColorFilters();
         mTransformImageListener.onContrast(mContrast);
     }
 
-    private void setBrightnessContrast() {
+    public void postSaturation(float saturation) {
+        mSaturation += saturation;
+
+        setColorFilters();
+        mTransformImageListener.onSaturation(mSaturation);
+    }
+
+    private void setColorFilters() {
         ColorMatrix cm = new ColorMatrix();
-        mContrast = ColorFilterGenerator.adjustContrast(cm, mContrast);
         mBrightness = ColorFilterGenerator.adjustBrightness(cm, mBrightness);
+        mContrast = ColorFilterGenerator.adjustContrast(cm, mContrast);
+        mSaturation = ColorFilterGenerator.adjustSaturation(cm, mSaturation);
         setColorFilter(new ColorMatrixColorFilter(cm));
     }
 
