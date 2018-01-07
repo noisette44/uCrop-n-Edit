@@ -1,7 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: "com.jfrog.bintray"
 
 android {
     compileSdkVersion 25
@@ -11,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 23
-        versionName version
+        versionName "2.2.2"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -47,104 +45,4 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
-def siteUrl = 'https://github.com/krokyze/uCrop-n-Edit'      // Homepage URL of the library
-def gitUrl = 'https://github.com/krokyze/uCrop-n-Edit.git'   // Git repository URL
-group = "com.github.krokyze"
-version = "2.2.2"
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom.project {
-            packaging 'aar'
-
-            // Add your description here
-            name "uCrop'n'Edit"
-            description = "Image Cropping + Editing Library for Android"
-            version = version
-            url siteUrl
-
-            // Set your license
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                }
-            }
-            developers {
-                developer {
-                    id 'martinanderson'
-                    name 'Martin Anderson'
-                    email 'martins.andersons@hotmail.com'
-                }
-            }
-            scm {
-                connection gitUrl
-                developerConnection gitUrl
-                url siteUrl
-
-            }
-        }
-    }
-}
-
-task androidJavadocs(type: Javadoc) {
-    source = android.sourceSets.main.java.sourceFiles
-}
-
-task androidJavadocsJar(type: Jar) {
-    classifier = 'javadoc'
-    //basename = artifact_id
-    from androidJavadocs.destinationDir
-}
-
-task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
-    //basename = artifact_id
-    from android.sourceSets.main.java.srcDirs
-}
-
-artifacts {
-    //archives packageReleaseJar
-    archives androidSourcesJar
-    archives androidJavadocsJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-// https://github.com/bintray/gradle-bintray-plugin
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    override = true
-    publish = true
-
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        // it is the name that appears in bintray when logged
-        name = "ucropnedit"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        version {
-            name = "2.2.1-native"
-
-            gpg {
-                sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = properties.getProperty("bintray.gpg.password")
-                //Optional. The passphrase for GPG signing'
-            }
-            mavenCentralSync {
-                sync = true
-                //Optional (true by default). Determines whether to sync the version to Maven Central.
-                user = properties.getProperty("bintray.oss.user") //OSS user token
-                password = properties.getProperty("bintray.oss.password") //OSS user password
-                close = '1'
-                //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-            }
-        }
-    }
-}
+apply from: 'publish.gradle'
