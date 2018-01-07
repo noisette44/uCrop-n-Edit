@@ -7,7 +7,7 @@ version = '2.2.2'
 publishing {
     publications {
         Production(MavenPublication) {
-            artifact("$buildDir/outputs/aar/app-release.aar")
+            artifact("$buildDir/outputs/aar/ucropnedit-release.aar")
             groupId
             artifactId 'ucropnedit'
             version this.version
