@@ -130,7 +130,7 @@ bintray {
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         version {
-            name = "2.2.1-native"
+            name = "2.2.2"
 
             gpg {
                 sign = true //Determines whether to GPG sign the files. The default is false
