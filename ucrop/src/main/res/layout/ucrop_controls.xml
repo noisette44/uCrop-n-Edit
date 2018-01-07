@@ -34,6 +34,10 @@
         <include
             android:id="@+id/layout_saturation_bar"
             layout="@layout/ucrop_layout_saturation_wheel" />
+
+        <include
+            android:id="@+id/layout_sharpness_bar"
+            layout="@layout/ucrop_layout_sharpness_wheel" />
     </FrameLayout>
 
     <ImageView
@@ -109,6 +113,16 @@
                 android:id="@+id/image_view_state_saturation"
                 style="@style/ucrop_ImageViewWidgetIcon"
                 android:src="@drawable/ucrop_ic_saturation" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/state_sharpness"
+            style="@style/ucrop_WrapperIconState">
+
+            <ImageView
+                android:id="@+id/image_view_state_sharpness"
+                style="@style/ucrop_ImageViewWidgetIcon"
+                android:src="@drawable/ucrop_ic_sharpness" />
         </FrameLayout>
     </com.yalantis.ucrop.view.ControlLayout>
 </merge>

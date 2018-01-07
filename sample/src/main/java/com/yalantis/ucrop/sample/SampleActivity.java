@@ -46,6 +46,11 @@ public class SampleActivity extends BaseActivity {
     private CheckBox mCheckBoxHideBottomControls;
     private CheckBox mCheckBoxFreeStyleCrop;
 
+    private CheckBox mCheckBoxBrigtness;
+    private CheckBox mCheckBoxContrast;
+    private CheckBox mCheckBoxSaturation;
+    private CheckBox mCheckBoxSharpness;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +125,12 @@ public class SampleActivity extends BaseActivity {
         mTextViewQuality = ((TextView) findViewById(R.id.text_view_quality));
         mCheckBoxHideBottomControls = ((CheckBox) findViewById(R.id.checkbox_hide_bottom_controls));
         mCheckBoxFreeStyleCrop = ((CheckBox) findViewById(R.id.checkbox_freestyle_crop));
+
+
+        mCheckBoxBrigtness = ((CheckBox) findViewById(R.id.checkbox_brightness));
+        mCheckBoxContrast = ((CheckBox) findViewById(R.id.checkbox_contrast));
+        mCheckBoxSaturation = ((CheckBox) findViewById(R.id.checkbox_saturation));
+        mCheckBoxSharpness = ((CheckBox) findViewById(R.id.checkbox_sharpness));
 
         mRadioGroupAspectRatio.check(R.id.radio_dynamic);
         mEditTextRatioX.addTextChangedListener(mAspectRatioTextWatcher);
@@ -270,6 +281,11 @@ public class SampleActivity extends BaseActivity {
 
         options.setHideBottomControls(mCheckBoxHideBottomControls.isChecked());
         options.setFreeStyleCropEnabled(mCheckBoxFreeStyleCrop.isChecked());
+
+        options.setBrightnessEnabled(mCheckBoxBrigtness.isChecked());
+        options.setContrastEnabled(mCheckBoxContrast.isChecked());
+        options.setSaturationEnabled(mCheckBoxSaturation.isChecked());
+        options.setSharpnessEnabled(mCheckBoxSharpness.isChecked());
 
         /*
         If you want to configure how gestures work for all UCropActivity tabs

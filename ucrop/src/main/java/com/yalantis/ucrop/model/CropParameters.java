@@ -17,11 +17,13 @@ public class CropParameters {
     private float mBrightness;
     private float mContrast;
     private float mSaturation;
+    private float mSharpness;
 
     public CropParameters(int maxResultImageSizeX, int maxResultImageSizeY,
                           Bitmap.CompressFormat compressFormat, int compressQuality,
                           String imageInputPath, String imageOutputPath, ExifInfo exifInfo,
-                          float brightness, float contrast, float saturation) {
+                          float brightness, float contrast, float saturation,
+                          float sharpness) {
         mMaxResultImageSizeX = maxResultImageSizeX;
         mMaxResultImageSizeY = maxResultImageSizeY;
         mCompressFormat = compressFormat;
@@ -32,6 +34,7 @@ public class CropParameters {
         mBrightness = brightness;
         mContrast = contrast;
         mSaturation = saturation;
+        mSharpness = sharpness;
     }
 
     public int getMaxResultImageSizeX() {
@@ -72,5 +75,9 @@ public class CropParameters {
 
     public float getSaturation() {
         return mSaturation;
+    }
+
+    public float getSharpness() {
+        return mSharpness;
     }
 }

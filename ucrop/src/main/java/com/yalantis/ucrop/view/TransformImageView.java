@@ -1,5 +1,6 @@
 package com.yalantis.ucrop.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.ColorMatrix;
@@ -8,6 +9,13 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicConvolve3x3;
+import android.renderscript.Type;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,6 +66,13 @@ public class TransformImageView extends ImageView {
     private float mContrast = 0;
     private float mSaturation = 0;
 
+    private Allocation mInAllocation;
+    private Allocation mOutAllocation;
+    private ScriptIntrinsicConvolve3x3 mSharpnessScript;
+    private SharpnessScriptTask mSharpnessScriptTask;
+
+    private float mSharpness = 0;
+
     private String mImageInputPath, mImageOutputPath;
     private ExifInfo mExifInfo;
 
@@ -79,6 +94,8 @@ public class TransformImageView extends ImageView {
         void onContrast(float currentContrast);
 
         void onSaturation(float currentSaturation);
+
+        void onSharpness(float currentSharpness);
     }
 
     public TransformImageView(Context context) {
@@ -160,6 +177,7 @@ public class TransformImageView extends ImageView {
                         mExifInfo = exifInfo;
 
                         mBitmapDecoded = true;
+                        createScript(bitmap);
                         setImageBitmap(bitmap);
                     }
 
@@ -204,16 +222,32 @@ public class TransformImageView extends ImageView {
                 getMatrixValue(matrix, Matrix.MSCALE_X)) * (180 / Math.PI));
     }
 
+    /**
+     * @return - current image brightness.
+     */
     public float getCurrentBrightness() {
         return mBrightness;
     }
 
+    /**
+     * @return - current image contrast.
+     */
     public float getCurrentContrast() {
         return mContrast;
     }
 
+    /**
+     * @return - current image saturation.
+     */
     public float getCurrentSaturation() {
         return mSaturation;
+    }
+
+    /**
+     * @return - current image sharpness.
+     */
+    public float getCurrentSharpness() {
+        return mSharpness;
     }
 
     @Override
@@ -279,6 +313,11 @@ public class TransformImageView extends ImageView {
         }
     }
 
+    /**
+     * This method changes image brightness.
+     *
+     * @param brightness - brightness
+     */
     public void postBrightness(float brightness) {
         mBrightness += brightness;
 
@@ -286,7 +325,11 @@ public class TransformImageView extends ImageView {
         mTransformImageListener.onBrightness(mBrightness);
     }
 
-
+    /**
+     * This method changes image contrast.
+     *
+     * @param contrast - contrast
+     */
     public void postContrast(float contrast) {
         mContrast += contrast;
 
@@ -294,6 +337,11 @@ public class TransformImageView extends ImageView {
         mTransformImageListener.onContrast(mContrast);
     }
 
+    /**
+     * This method changes image saturation.
+     *
+     * @param saturation - saturation
+     */
     public void postSaturation(float saturation) {
         mSaturation += saturation;
 
@@ -307,6 +355,71 @@ public class TransformImageView extends ImageView {
         mContrast = ColorFilterGenerator.adjustContrast(cm, mContrast);
         mSaturation = ColorFilterGenerator.adjustSaturation(cm, mSaturation);
         setColorFilter(new ColorMatrixColorFilter(cm));
+    }
+
+    /**
+     * This method changes image sharpness.
+     *
+     * @param sharpness - sharpness
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void postSharpness(float sharpness) {
+        mSharpness += sharpness;
+        mSharpness = Math.min(5, Math.max(0, mSharpness));
+
+        if (mSharpnessScriptTask != null) {
+            mSharpnessScriptTask.cancel(false);
+        }
+        mSharpnessScriptTask = new SharpnessScriptTask();
+        mSharpnessScriptTask.execute(mSharpness);
+
+        mTransformImageListener.onSharpness(mSharpness * 10);
+    }
+
+    /*
+     * In the AsyncTask, it invokes RenderScript intrinsics to do a filtering.
+     * After the filtering is done, an operation blocks at Allocation.copyTo() in AsyncTask thread.
+     * Once all operation is finished at onPostExecute() in UI thread, it can invalidate and update
+     * ImageView UI.
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private class SharpnessScriptTask extends AsyncTask<Float, Void, Boolean> {
+        Boolean issued = false;
+
+        protected Boolean doInBackground(Float... values) {
+            if (!isCancelled()) {
+                issued = true;
+
+                float value = values[0];
+                float[] coefficients = {
+                        0, -value, 0,
+                        -value, 1 + (4 * value), -value,
+                        0, -value, 0};
+
+                mSharpnessScript.setCoefficients(coefficients);
+                mSharpnessScript.forEach(mOutAllocation);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                updateView();
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean result) {
+            if (issued) {
+                updateView();
+            }
+        }
+
+        private void updateView() {
+            mOutAllocation.copyTo(getViewBitmap());
+        }
     }
 
     protected void init() {
@@ -390,4 +503,25 @@ public class TransformImageView extends ImageView {
         mCurrentImageMatrix.mapPoints(mCurrentImageCenter, mInitialImageCenter);
     }
 
+    /**
+     * Initialize RenderScript.
+     * <p>
+     * <p>Creates RenderScript kernel that performs sharpness manipulation.</p>
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void createScript(Bitmap bitmap) {
+        // Initialize RS
+        RenderScript rs = RenderScript.create(getContext());
+
+        // Allocate buffers
+        mInAllocation = Allocation.createFromBitmap(rs, bitmap.copy(bitmap.getConfig(), true));
+
+        //Create allocation with the same type
+        Type type = mInAllocation.getType();
+        mOutAllocation = Allocation.createTyped(rs, type);
+
+        // Load script
+        mSharpnessScript = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
+        mSharpnessScript.setInput(mInAllocation);
+    }
 }
