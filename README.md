@@ -8,10 +8,6 @@
 
 ## Usage
 
-*For a working implementation, please have a look at the Sample Project - sample*
-
-<a href="https://play.google.com/store/apps/details?id=com.yalantis.ucrop.sample&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="185" height="70"/></a>
-
 1. Include the library as local library project.
 
 	```
@@ -23,7 +19,7 @@
 	}
 	```
 
-    ``` compile 'com.github.krokyze:ucropnedit:2.2.2' ```
+    ``` implementation 'com.github.krokyze:ucropnedit:2.2.3' ```
     
 2. To use uCrop’n’Edit, you can follow the exact same methods as for uCrop: <a href="https://github.com/Yalantis/uCrop#usage">Usage</a>
 
@@ -35,7 +31,11 @@ Massive thanks to guys from Yalantis for open sourcing this great library!
 
 ## Changelog (<a href="https://github.com/Yalantis/uCrop#changelog">uCrop Changelog</a>)
 
-### Version 2.2.2
+### Version 2.2.3 (based on uCrop 2.2.2)
+
+  * Merged new version from uCrop.
+
+### Version 2.2.2 (based on uCrop 2.2.1)
 
   * Saturation feature
   * Sharpness feature (supported for devices with >= API 17)
