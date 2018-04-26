@@ -161,10 +161,10 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         mCheckBoxFreeStyleCrop = findViewById(R.id.checkbox_freestyle_crop);
 
 
-        mCheckBoxBrigtness = ((CheckBox) findViewById(R.id.checkbox_brightness));
-        mCheckBoxContrast = ((CheckBox) findViewById(R.id.checkbox_contrast));
-        mCheckBoxSaturation = ((CheckBox) findViewById(R.id.checkbox_saturation));
-        mCheckBoxSharpness = ((CheckBox) findViewById(R.id.checkbox_sharpness));
+        mCheckBoxBrigtness = findViewById(R.id.checkbox_brightness);
+        mCheckBoxContrast = findViewById(R.id.checkbox_contrast);
+        mCheckBoxSaturation = findViewById(R.id.checkbox_saturation);
+        mCheckBoxSharpness = findViewById(R.id.checkbox_sharpness);
 
         mRadioGroupAspectRatio.check(R.id.radio_dynamic);
         mEditTextRatioX.addTextChangedListener(mAspectRatioTextWatcher);
