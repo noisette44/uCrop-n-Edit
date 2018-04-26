@@ -2,12 +2,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 23
         versionName "2.2.2"
 
@@ -40,9 +40,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 apply from: 'publish.gradle'

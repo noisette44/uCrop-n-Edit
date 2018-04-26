@@ -22,12 +22,12 @@
 	   }
 	}
 	```
-	
+
     ``` compile 'com.github.krokyze:ucropnedit:2.2.2' ```
     
 2. To use uCrop’n’Edit, you can follow the exact same methods as for uCrop: <a href="https://github.com/Yalantis/uCrop#usage">Usage</a>
 
-If you have any interesting ideas for uCrop’n’Edit do not be afraid to let me know. You can easily leave a request and I will be happy to take a look at the viability of your proposal. I’ll be more than happy to try and add some new features to the library, if I think they can make it even better! 
+If you have any interesting ideas for uCrop’n’Edit do not be afraid to let me know. You can easily leave a request and I will be happy to take a look at the viability of your proposal. I’ll be more than happy to try and add some new features to the library, if I think they can make it even better!
 
 #### Please keep in mind that most of the work is developed by Yalantis, so if you find any bugs that’s not related to brightness, contrast, saturation or sharpness, you should add a new issue to their <a href="https://github.com/Yalantis/uCrop/issues">Github page</a> and as they will push update, I will pull it to make sure everything works as best as it can.
 
