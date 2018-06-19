@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.noisette44'
 
-group = 'com.github.krokyze'
 version = '2.2.3'
 
 publishing {
@@ -25,44 +25,6 @@ publishing {
                         dependencyNode.appendNode('version', it.version)
                     }
                 }
-            }
-        }
-    }
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    override = true
-    publish = true
-
-    publications = ['Production']
-    configurations = ['archives']
-
-    pkg {
-        repo = 'maven'
-        name = 'ucropnedit'
-        websiteUrl = 'https://github.com/krokyze/uCrop-n-Edit'
-        vcsUrl = 'https://github.com/krokyze/uCrop-n-Edit.git'
-        licenses = ["Apache-2.0"]
-        
-        version {
-            name = "2.2.3"
-
-            gpg {
-                sign = true
-                passphrase = properties.getProperty("bintray.gpg.password")
-            }
-
-            mavenCentralSync {
-                sync = true
-                user = properties.getProperty("bintray.oss.user")
-                password = properties.getProperty("bintray.oss.password")
-                close = '1'
             }
         }
     }
